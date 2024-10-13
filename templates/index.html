@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Deloitte Auditor Enterprise Chat UI</title>
+    <style>
+        /* Overall container and body */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #e5e5e5;
+        }
+
+        .container {
+            width: 600px;
+            background-color: white;
+            border: 2px solid #2d4b80;
+            border-radius: 5px;
+        }
+
+        /* Header Section */
+        .header {
+            background-color: #2d4b80;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .header .logo {
+            font-size: 22px;
+            color: #e0e0e0;
+        }
+
+        /* Chat Section */
+        .chat-container {
+            padding: 20px;
+            border-top: 2px solid #2d4b80;
+        }
+
+        .chat-container label {
+            font-size: 20px;
+            color: #2d4b80;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .chat-container textarea {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #2d4b80;
+            border-radius: 5px;
+            resize: none;
+            height: 120px;
+        }
+
+        /* Button Container */
+        .button-container {
+            margin-top: 10px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .button-container button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .button-container .send-btn {
+            background-color: #15d462;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 120px;
+        }
+
+        .button-container .send-btn img {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+        }
+
+        .button-container .cancel-btn {
+            background-color: #6f2b7f;
+            color: white;
+            width: 120px;
+        }
+
+        /* Response Section */
+        .response-container {
+            margin-top: 20px;
+        }
+
+        .response-container label {
+            font-size: 18px;
+            color: #2d4b80;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .response-container .response-box {
+            background-color: #d3d3d3;
+            padding: 15px;
+            height: 150px;
+            border-radius: 5px;
+            border: 1px solid #2d4b80;
+            overflow-y: auto;
+        }
+
+        /* Spinner */
+        .spinner {
+            display: none;
+            width: 30px;
+            height: 30px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #2d4b80;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header">
+            Deloitte Auditor Enterprise Chat UI
+            <div class="logo">Deloitte.</div>
+        </div>
+
+        <!-- Chat Section -->
+        <div class="chat-container">
+            <label for="question">Tax Prompt</label>
+            <textarea id="question" placeholder="Type your tax-related question here..."></textarea>
+            <div class="button-container">
+                <button id="send-button" class="send-btn">
+                    <img src="/static/images/ChatGPT-Logo.png" alt="OpenAI Logo"> Send
+                </button>
+                <div class="spinner" id="spinner"></div> <!-- Spinner added -->
+                <button id="cancel-button" class="cancel-btn" disabled>Cancel</button>
+            </div>
+        </div>
+
+        <!-- Response Section -->
+        <div class="response-container">
+            <label>Response</label>
+            <div id="response-box" class="response-box">
+                <!-- Responses will be displayed here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let controller;
+
+        document.getElementById('send-button').addEventListener('click', function() {
+            const question = document.getElementById('question').value.trim();
+            if (!question) return;
+
+            document.getElementById('question').value = '';
+            document.getElementById('question').disabled = true;
+            document.getElementById('send-button').disabled = true;
+            document.getElementById('cancel-button').disabled = false;
+            document.getElementById('spinner').style.display = 'inline-block'; // Show spinner
+            document.getElementById('response-box').textContent = "Waiting for response..."; // Show waiting message
+
+            controller = new AbortController();
+            const signal = controller.signal;
+
+            fetch('/api/tax-prompt', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ question: question }),
+                signal: signal
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    document.getElementById('response-box').textContent = "Error: " + data.error;
+                } else {
+                    document.getElementById('response-box').textContent = data.answer;
+                }
+            })
+            .catch(error => {
+                if (error.name === 'AbortError') {
+                    document.getElementById('response-box').textContent = "Request cancelled.";
+                } else {
+                    document.getElementById('response-box').textContent = "Error: " + error;
+                }
+            })
+            .finally(() => {
+                document.getElementById('question').disabled = false;
+                document.getElementById('send-button').disabled = false;
+                document.getElementById('cancel-button').disabled = true;
+                document.getElementById('spinner').style.display = 'none'; // Hide spinner
+            });
+        });
+
+        document.getElementById('cancel-button').addEventListener('click', function() {
+            if (controller) {
+                controller.abort();
+            }
+        });
+    </script>
+</body>
+</html>
