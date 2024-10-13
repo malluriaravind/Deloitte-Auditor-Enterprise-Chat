@@ -14,6 +14,8 @@ A simple chatbot application built with Python Flask, enabling users to interact
 - **Chat History:** Users can view the history of their interactions with the chatbot.
 - **User-Friendly Interface:** A simple web interface to input questions and receive answers.
 - **Customizable AI Responses:** The chatbot is powered by an AI model capable of understanding and responding to tax-related queries.
+- **Transactional Logging:** Prompt and response details are saved locally in a SQL database for audit compliance.
+- **History Context Window:** Users can set a history context window to query past interactions, enhancing the chatbot's ability to provide context-aware responses.
 
 ## Technologies Used
 
@@ -47,8 +49,8 @@ Follow the steps below to set up and run the application locally.
    pip install flask
    ```
 
-4. **Set up the database (if applicable):**
-   - Initialize your database. If using SQLite, the database file will be created automatically when the application runs.
+4. **Set up the database**
+   - The SQL table for storing prompts and responses will be created automatically when the application runs. Ensure you have the necessary permissions to create a database.
 
 ## Usage
 
@@ -139,9 +141,30 @@ $(document).ready(function() {
 });
 ```
 
-## Testing
+## Database Testing
+- ![Chat History with Prompts and Responses](output/chat0history.PNG) 
 
-You can test the application using tools like Postman or directly through the frontend interface. Ensure that the server is running to receive requests.
+- To verify that the SQL table for prompts and responses is properly set up, you can:
+
+- Use a SQL client or database management tool to connect to the database.
+
+- Execute the following SQL command to check the contents of the prompts and responses table:
+
+```
+sqlite chat_history.db
+```
+
+```
+.tables
+```
+**Output**
+- ![Showing Database Tables](output/db-tables.PNG)  
+
+```
+select * from tax_chat;_
+```
+**Output**
+- ![Database Table showing chat history](output/db-chat-history.PNG)  
 
 ## Contributing
 
