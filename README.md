@@ -5,7 +5,7 @@ Deloitte Auditor Enterprise Chat UI could refer to a chat-based interface or app
 
 A simple chatbot application built with Python Flask, enabling users to interact with a tax-related AI chatbot. The application supports user queries through a web interface and responds with relevant information. 
 
-![Chatbot Interface](output/chatbot_interface.png)  
+![Chatbot Interface](output/chatbot_interface.PNG)  
 
 ## Features
 
@@ -84,10 +84,10 @@ Follow the steps below to set up and run the application locally.
   }
   ```
 - - Chatbot Interface Providing Tax-Related Responses
-- ![Tax Related Response 1](output/tax-related-response-1.png)  
-- ![Tax Related Response 2](output/tax-related-response-2.png)  
-- ![Tax Related Response 3](output/tax-related-response-3.png)  
-- ![Non Tax Related Response](output/non-tax-related-response.png)  
+- ![Tax Related Response 1](output/tax-related-response-1.PNG)  
+- ![Tax Related Response 2](output/tax-related-response-2.PNG)  
+- ![Tax Related Response 3](output/tax-related-response-3.PNG)  
+- ![Non Tax Related Response](output/non-tax-related-response.PNG)  
 
 ### GET /api/get-chats
 
@@ -107,7 +107,7 @@ Follow the steps below to set up and run the application locally.
   ]
   ```
 - Local Session Store Storing Prompts
-- ![Chat Storing Local Session Storage](output/local-session-store.png)  
+- ![Chat Storing Local Session Storage](output/local-session-store.PNG)  
 
 
 ## Frontend Implementation
