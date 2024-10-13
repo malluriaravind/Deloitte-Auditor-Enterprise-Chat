@@ -142,7 +142,7 @@ $(document).ready(function() {
 ```
 
 ## Database Testing
-- ![Chat History with Prompts and Responses](output/chat0history.PNG) 
+- ![Chat History with Prompts and Responses](output/db-chat-history.PNG) 
 
 - To verify that the SQL table for prompts and responses is properly set up, you can:
 
